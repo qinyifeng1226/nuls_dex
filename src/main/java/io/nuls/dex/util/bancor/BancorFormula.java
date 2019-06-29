@@ -29,11 +29,28 @@ public class BancorFormula {
 //    static BigInteger balance = BigInteger.valueOf(2500L);
 //    static BigInteger price = BigInteger.valueOf(1L);
 //    static BigInteger ONE = BigInteger.valueOf(1L);
+
+    /* CSDN示例*/
+    /*
     static Double supply = 10000d;
     static Double balance = 2500d;
     static Double price = 0.5d;
     static Double cw = 0.5;
+    */
 
+    /*白皮书示例*/
+    static Double supply = 300000d;
+    static Double balance = 60000d;
+    static Double price = 1d;
+    static Double cw = 0.2;
+
+    /**
+     * @param supply
+     * @param balance
+     * @param cw
+     * @param paid
+     * @return
+     */
     public static Double calculateBuy(Double supply, Double balance, Double cw, Double paid) {
         Double tokens = BancorFormula.mul(supply, Math.pow(1 + BancorFormula.divide(String.valueOf(paid), String.valueOf(balance)), cw) - 1);
         BancorFormula.supply = BancorFormula.add(BancorFormula.supply, tokens);
@@ -43,6 +60,13 @@ public class BancorFormula {
         return tokens;
     }
 
+    /**
+     * @param supply
+     * @param balance
+     * @param cw
+     * @param sellAmount
+     * @return
+     */
     public static Double calculateSell(Double supply, Double balance, Double cw, Double sellAmount) {
         Double reserve = BancorFormula.mul(balance, 1 - Math.pow(1 - BancorFormula.divide(sellAmount, supply), 1 / cw));
         BancorFormula.supply = BancorFormula.subtract(BancorFormula.supply, sellAmount);
