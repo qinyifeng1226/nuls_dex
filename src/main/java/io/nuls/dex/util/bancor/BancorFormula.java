@@ -38,7 +38,6 @@ public class BancorFormula {
         Double tokens = BancorFormula.mul(supply, Math.pow(1 + BancorFormula.divide(String.valueOf(paid), String.valueOf(balance)), cw) - 1);
         BancorFormula.supply = BancorFormula.add(BancorFormula.supply, tokens);
         BancorFormula.balance = BancorFormula.add(BancorFormula.balance, paid);
-        //BancorFormula.price = BancorFormula.divide(paid.toString(), tokens.toString());
         BancorFormula.price = BancorFormula.divide(BancorFormula.balance, (BancorFormula.mul(BancorFormula.supply, cw)));
         System.out.println("buy price: " + price);
         return tokens;
@@ -46,7 +45,6 @@ public class BancorFormula {
 
     public static Double calculateSell(Double supply, Double balance, Double cw, Double sellAmount) {
         Double reserve = BancorFormula.mul(balance, 1 - Math.pow(1 - BancorFormula.divide(sellAmount, supply), 1 / cw));
-        //BancorFormula.price = BancorFormula.divide(reserve, sellAmount);
         BancorFormula.supply = BancorFormula.subtract(BancorFormula.supply, sellAmount);
         BancorFormula.balance = BancorFormula.subtract(BancorFormula.balance, reserve);
         BancorFormula.price = BancorFormula.divide(BancorFormula.balance, (BancorFormula.mul(BancorFormula.supply, cw)));
@@ -55,7 +53,6 @@ public class BancorFormula {
     }
 
     public static void main(String[] args) {
-        BancorFormula bancor = new BancorFormula();
         Scanner scanner = new Scanner(System.in);
         String input;
         while (scanner.hasNext() && !(input = scanner.nextLine()).equals("0")) {
