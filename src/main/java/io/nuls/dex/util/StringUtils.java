@@ -1,5 +1,6 @@
 package io.nuls.dex.util;
 
+import java.text.DecimalFormat;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -208,5 +209,9 @@ public class StringUtils {
             theOther = theOther.trim();
         }
         return ignoreCase ? one.equalsIgnoreCase(theOther) : one.equals(theOther);
+    }
+
+    public static String format(Double str) {
+        return new DecimalFormat(",###").format(str);
     }
 }
