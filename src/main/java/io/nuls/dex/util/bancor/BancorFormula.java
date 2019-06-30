@@ -41,9 +41,9 @@ public class BancorFormula {
 
     /*白皮书示例*/
     static Double supply = 300000d;
-    static Double balance = 60000d;
+    static Double balance = 300000d;
     static Double price = 1d;
-    static Double cw = 0.2;
+    static Double cw = 1d;
 
     static Double marketCap = 0d;
     static int scale = 4;
