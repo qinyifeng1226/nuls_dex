@@ -4,6 +4,8 @@ import io.nuls.dex.util.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.math.BigDecimal;
+
 /**
  * 类描述：bancor公式测试
  *
@@ -31,14 +33,47 @@ public class BancorFormulaTest {
         for (int i = 1; i <= 100; i++) {
             if (i % 5 == 0) {
                 // sell token
-                Double reserve = BancorFormula.calculateSell(BancorFormula.supply, BancorFormula.balance, BancorFormula.cw, sell);
+                Double reserve = BancorFormula.calculateSell(sell);
                 System.out.println("get reserve: " + reserve + ", supply: " + StringUtils.format(BancorFormula.supply) + ", balance: " + StringUtils.format(BancorFormula.balance) + ", price: " + BancorFormula.price + ", marketCap: " + StringUtils.format(BancorFormula.marketCap));
             } else {
                 // buy token
-                Double tokens = BancorFormula.calculateBuy(BancorFormula.supply, BancorFormula.balance, BancorFormula.cw, paid);
+                Double tokens = BancorFormula.calculateBuy(paid);
                 System.out.println("buy tokens: " + tokens + ", supply: " + StringUtils.format(BancorFormula.supply) + ", balance: " + StringUtils.format(BancorFormula.balance) + ", price: " + BancorFormula.price + ", marketCap: " + StringUtils.format(BancorFormula.marketCap));
             }
         }
+    }
+
+    /**
+     * 测试白皮书中的数据用例，检查是否一致
+     */
+    @Test
+    public void buyAndSellTest2() {
+        BancorFormula.init(300000d, 60000d, 0.2d);
+        Double paid = 300d;
+        Double tokens = BancorFormula.calculateBuy(paid);
+        System.out.println("buy tokens: " + tokens + ", supply: " + StringUtils.format(BancorFormula.supply) + ", balance: " + StringUtils.format(BancorFormula.balance) + ", price: " + BancorFormula.price + ", marketCap: " + StringUtils.format(BancorFormula.marketCap));
+        tokens = BancorFormula.calculateBuy(700d);
+        System.out.println("buy tokens: " + tokens + ", supply: " + StringUtils.format(BancorFormula.supply) + ", balance: " + StringUtils.format(BancorFormula.balance) + ", price: " + BancorFormula.price + ", marketCap: " + StringUtils.format(BancorFormula.marketCap));
+        tokens = BancorFormula.calculateSell(1302d);
+        System.out.println("buy tokens: " + tokens + ", supply: " + StringUtils.format(BancorFormula.supply) + ", balance: " + StringUtils.format(BancorFormula.balance) + ", price: " + BancorFormula.price + ", marketCap: " + StringUtils.format(BancorFormula.marketCap));
+        tokens = BancorFormula.calculateBuy(100d);
+        System.out.println("buy tokens: " + tokens + ", supply: " + StringUtils.format(BancorFormula.supply) + ", balance: " + StringUtils.format(BancorFormula.balance) + ", price: " + BancorFormula.price + ", marketCap: " + StringUtils.format(BancorFormula.marketCap));
+    }
+
+    /**
+     * 测试：CRR为50%，Supply为300000，balance为150000
+     */
+    @Test
+    public void buyAndSellTest3() {
+        BancorFormula.init(300000d, 150000d, 0.5d);
+        Double tokens = BancorFormula.calculateBuy(100000d);
+        System.out.println("buy tokens: " + tokens + ", supply: " + StringUtils.format(BancorFormula.supply) + ", balance: " + StringUtils.format(BancorFormula.balance) + ", price: " + BancorFormula.price + ", marketCap: " + StringUtils.format(BancorFormula.marketCap));
+        tokens = BancorFormula.calculateBuy(500000d);
+        System.out.println("buy tokens: " + tokens + ", supply: " + StringUtils.format(BancorFormula.supply) + ", balance: " + StringUtils.format(BancorFormula.balance) + ", price: " + BancorFormula.price + ", marketCap: " + StringUtils.format(BancorFormula.marketCap));
+        tokens = BancorFormula.calculateSell(200000d);
+        System.out.println("buy tokens: " + tokens + ", supply: " + StringUtils.format(BancorFormula.supply) + ", balance: " + StringUtils.format(BancorFormula.balance) + ", price: " + BancorFormula.price + ", marketCap: " + StringUtils.format(BancorFormula.marketCap));
+        tokens = BancorFormula.calculateBuy(300000d);
+        System.out.println("buy tokens: " + tokens + ", supply: " + StringUtils.format(BancorFormula.supply) + ", balance: " + StringUtils.format(BancorFormula.balance) + ", price: " + BancorFormula.price + ", marketCap: " + StringUtils.format(BancorFormula.marketCap));
     }
 
 }

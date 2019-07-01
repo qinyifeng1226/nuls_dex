@@ -49,17 +49,27 @@ public class BancorFormula {
     static int scale = 4;
 
     /**
-     * 购买智能代币
+     * 初始化设置
      *
      * @param supply  智能代币总量
      * @param balance 准备金余额总量
      * @param cw      连接器权重
+     */
+    public static void init(Double supply, Double balance, Double cw) {
+        BancorFormula.supply = supply;
+        BancorFormula.balance = balance;
+        BancorFormula.cw = cw;
+    }
+
+    /**
+     * 购买智能代币
+     *
      * @param paid    支付准备金数量
      * @return 获得智能代币数量
      */
-    public static Double calculateBuy(Double supply, Double balance, Double cw, Double paid) {
+    public static Double calculateBuy(Double paid) {
         Double price = BancorFormula.price;
-        Double tokens = BancorFormula.mul(supply, Math.pow(1 + BancorFormula.divides(String.valueOf(paid), String.valueOf(balance)), cw) - 1, 0);
+        Double tokens = BancorFormula.mul(BancorFormula.supply, Math.pow(1 + BancorFormula.divides(String.valueOf(paid), String.valueOf(BancorFormula.balance)), cw) - 1, 0);
         BancorFormula.supply = BancorFormula.add(BancorFormula.supply, tokens);
         BancorFormula.balance = BancorFormula.add(BancorFormula.balance, paid);
         BancorFormula.price = BancorFormula.divide(BancorFormula.balance, (BancorFormula.mul(BancorFormula.supply, cw)), BancorFormula.scale);
@@ -74,16 +84,13 @@ public class BancorFormula {
     /**
      * 卖出智能代币
      *
-     * @param supply     智能代币总量
-     * @param balance    准备金余额总量
-     * @param cw         连接器权重
      * @param sellAmount 卖出智能代币数量
      * @return 获得准备金数量
      */
-    public static Double calculateSell(Double supply, Double balance, Double cw, Double sellAmount) {
+    public static Double calculateSell(Double sellAmount) {
         Double price = BancorFormula.price;
         // Double reserve = BancorFormula.mul0(balance, 1 - Math.pow(1 - BancorFormula.divide(sellAmount, supply), 1 / cw), 0);
-        Double reserve = BancorFormula.mul(balance, Math.pow(1 + BancorFormula.divide(sellAmount, supply), 1 / cw) - 1, 0);
+        Double reserve = BancorFormula.mul(BancorFormula.balance, Math.pow(1 + BancorFormula.divide(sellAmount, BancorFormula.supply), 1 / cw) - 1, 0);
         BancorFormula.supply = BancorFormula.subtract(BancorFormula.supply, sellAmount);
         BancorFormula.balance = BancorFormula.subtract(BancorFormula.balance, reserve);
         BancorFormula.price = BancorFormula.divide(BancorFormula.balance, (BancorFormula.mul(BancorFormula.supply, cw)), BancorFormula.scale);
@@ -112,14 +119,14 @@ public class BancorFormula {
                 if (StringUtils.isNotBlank(payNumers[0])) {
                     Double paid = Double.parseDouble(payNumers[0]);
                     if (paid > 0) {
-                        System.out.println("buy tokens: " + BancorFormula.calculateBuy(BancorFormula.supply, BancorFormula.balance, BancorFormula.cw, paid));
+                        System.out.println("buy tokens: " + BancorFormula.calculateBuy(paid));
                     }
                 }
                 // sell token
                 if (payNumers.length > 1 && StringUtils.isNotBlank(payNumers[1])) {
                     Double sell = Double.parseDouble(payNumers[1]);
                     if (sell > 0) {
-                        System.out.println("get reserve: " + BancorFormula.calculateSell(BancorFormula.supply, BancorFormula.balance, BancorFormula.cw, sell));
+                        System.out.println("get reserve: " + BancorFormula.calculateSell(sell));
                     }
                 }
 
