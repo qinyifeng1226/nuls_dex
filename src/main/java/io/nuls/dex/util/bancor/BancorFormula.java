@@ -58,6 +58,7 @@ public class BancorFormula {
      * @return 获得智能代币数量
      */
     public static Double calculateBuy(Double supply, Double balance, Double cw, Double paid) {
+        Double price = BancorFormula.price;
         Double tokens = BancorFormula.mul(supply, Math.pow(1 + BancorFormula.divides(String.valueOf(paid), String.valueOf(balance)), cw) - 1, 0);
         BancorFormula.supply = BancorFormula.add(BancorFormula.supply, tokens);
         BancorFormula.balance = BancorFormula.add(BancorFormula.balance, paid);
@@ -65,7 +66,8 @@ public class BancorFormula {
         BancorFormula.marketCap = BancorFormula.mul(BancorFormula.supply, BancorFormula.price);
         // 有效价格
         Double effectivePrice = BancorFormula.divide(paid, tokens, BancorFormula.scale);
-        System.out.println("effectivePrice: " + effectivePrice);
+        Double priceScale = BancorFormula.mul(BancorFormula.divide(BancorFormula.subtract(BancorFormula.price, price), price), 100);
+        System.out.println("buy effectivePrice: " + effectivePrice + ", priceScale: " + priceScale + "%");
         return tokens;
     }
 
@@ -79,6 +81,7 @@ public class BancorFormula {
      * @return 获得准备金数量
      */
     public static Double calculateSell(Double supply, Double balance, Double cw, Double sellAmount) {
+        Double price = BancorFormula.price;
         // Double reserve = BancorFormula.mul0(balance, 1 - Math.pow(1 - BancorFormula.divide(sellAmount, supply), 1 / cw), 0);
         Double reserve = BancorFormula.mul(balance, Math.pow(1 + BancorFormula.divide(sellAmount, supply), 1 / cw) - 1, 0);
         BancorFormula.supply = BancorFormula.subtract(BancorFormula.supply, sellAmount);
@@ -87,7 +90,8 @@ public class BancorFormula {
         BancorFormula.marketCap = BancorFormula.mul(BancorFormula.supply, BancorFormula.price);
         // 有效价格
         Double effectivePrice = BancorFormula.divide(reserve, sellAmount, BancorFormula.scale);
-        System.out.println("effectivePrice: " + effectivePrice);
+        Double priceScale = BancorFormula.mul(BancorFormula.divide(BancorFormula.subtract(BancorFormula.price, price), price), 100);
+        System.out.println("sell effectivePrice: " + effectivePrice + ", priceScale: " + priceScale + "%");
         return reserve;
     }
 
